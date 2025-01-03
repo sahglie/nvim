@@ -27,7 +27,8 @@ return {
     config = function()
       require('mason-lspconfig').setup({
         --ensure_installed = { "lua_ls", "gopls", "ruby_lsp", "templ", "html" },
-        ensure_installed = { 'lua_ls', 'gopls', 'ruby_lsp', 'html' },
+        --ensure_installed = { 'lua_ls', 'gopls', 'ruby_lsp', 'html' },
+        ensure_installed = { 'lua_ls', 'gopls' },
         automatic_installation = false,
       })
     end,
