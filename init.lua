@@ -20,7 +20,6 @@ vim.keymap.set('n', '<leader>r', ':!%:p<cr>')
 vim.keymap.set('n', '<leader>h', ':set hls!<cr>')
 vim.keymap.set('n', '<leader>w', ':set wrap!<cr>')
 vim.keymap.set('n', '<leader>d', ':bp<bar>vs<bar>bn<bar>bd<cr>')
-vim.keymap.set('n', '<leader>1', ':NvimTreeToggle<cr>')
 
 -- Move around splits with <c-hjkl>
 vim.keymap.set("n", "<c-j>", "<c-w>j")
