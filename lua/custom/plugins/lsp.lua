@@ -26,9 +26,7 @@ return {
     'williamboman/mason-lspconfig.nvim',
     config = function()
       require('mason-lspconfig').setup({
-        --ensure_installed = { "lua_ls", "gopls", "ruby_lsp", "templ", "html" },
-        --ensure_installed = { 'lua_ls', 'gopls', 'ruby_lsp', 'html' },
-        ensure_installed = { 'lua_ls', 'gopls' },
+        ensure_installed = { 'lua_ls', 'gopls', 'ruby_lsp', 'html' },
         automatic_installation = false,
       })
     end,
@@ -43,7 +41,10 @@ return {
       local util = require('lspconfig/util')
 
       lspconfig.lua_ls.setup { capabilities = capabilities }
-      lspconfig.ruby_lsp.setup { capabilities = capabilities }
+      lspconfig.ruby_lsp.setup({
+        capabilities = capabilities,
+        cmd = { os.getenv("HOME") .. "/.local/share/mise/installs/ruby/3.4.1/bin/ruby-lsp" }
+      })
       lspconfig.templ.setup { capabilities = capabilities }
 
       lspconfig.gopls.setup {
@@ -116,10 +117,12 @@ return {
         end,
       })
 
-      --vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
-      --vim.keymap.set('n', '<leader>gd', vim.lsp.buf.definition, {})
-      --vim.keymap.set('n', '<leader>gr', vim.lsp.buf.references, {})
-      --vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, {})
+      vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
+      vim.keymap.set('n', '<leader>gd', vim.lsp.buf.definition, {})
+      vim.keymap.set('n', '<leader>gr', vim.lsp.buf.references, {})
+      vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, {})
+      vim.keymap.set('n', '<leader>gf', vim.lsp.buf.format, {})
+      vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, {})
     end,
   },
 }
