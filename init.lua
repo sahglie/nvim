@@ -27,6 +27,8 @@ vim.keymap.set("n", "<c-k>", "<c-w>k")
 vim.keymap.set("n", "<c-h>", "<c-w>h")
 vim.keymap.set("n", "<c-l>", "<c-w>l")
 
+vim.keymap.set("n", 'tt', ':A<CR>', { noremap = true, silent = true })
+
 require("config.lazy")
 
 vim.api.nvim_create_autocmd("TextYankPost", {
