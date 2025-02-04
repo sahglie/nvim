@@ -17,12 +17,14 @@ return {
 
     require("telescope").load_extension("fzf")
 
-    vim.keymap.set("n", "<leader>fh", require("telescope.builtin").help_tags)
-    vim.keymap.set("n", "<leader>fb", require("telescope.builtin").buffers)
-    vim.keymap.set("n", "<leader>fd", require("telescope.builtin").find_files)
-    vim.keymap.set("n", "<leader>ff", require("telescope.builtin").find_files)
-    vim.keymap.set("n", "<leader>fk", require("telescope.builtin").keymaps)
-    vim.keymap.set("n", "<leader>fa", require("telescope.builtin").commands)
+    vim.keymap.set("n", "<leader>sh", require("telescope.builtin").help_tags)
+    vim.keymap.set("n", "<leader>sb", require("telescope.builtin").buffers)
+    vim.keymap.set("n", "<leader>sf", require("telescope.builtin").find_files)
+    vim.keymap.set("n", "<leader>b", require("telescope.builtin").buffers)
+    vim.keymap.set("n", "<leader>f", require("telescope.builtin").find_files)
+    vim.keymap.set("n", "<leader>sk", require("telescope.builtin").keymaps)
+    vim.keymap.set("n", "<leader>sa", require("telescope.builtin").commands)
+    vim.keymap.set("n", "<leader>G", require("telescope.builtin").commands)
     vim.keymap.set("n", "<leader>en", function()
       local opts = require("telescope.themes").get_ivy({
         cwd = vim.fn.stdpath("config")
