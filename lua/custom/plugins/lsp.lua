@@ -1,5 +1,28 @@
 return {
   {
+    "hrsh7th/cmp-nvim-lsp"
+  },
+  {
+    "hrsh7th/nvim-cmp"
+  },
+  {
+    'williamboman/mason.nvim',
+    config = function()
+      require('mason').setup {
+        ensure_installed = { 'gofumpt', 'goimports', 'goimports-revised' },
+      }
+    end,
+  },
+  {
+    'williamboman/mason-lspconfig.nvim',
+    config = function()
+      require('mason-lspconfig').setup({
+        ensure_installed = { 'lua_ls', 'gopls', 'ruby_lsp', 'html' },
+        automatic_installation = true,
+      })
+    end,
+  },
+  {
     "neovim/nvim-lspconfig",
     dependencies = {
       "saghen/blink.cmp",
@@ -15,24 +38,7 @@ return {
     },
   },
   {
-    'williamboman/mason.nvim',
-    config = function()
-      require('mason').setup {
-        ensure_installed = { 'gofumpt', 'goimports', 'goimports-revised' },
-      }
-    end,
-  },
-  {
-    'williamboman/mason-lspconfig.nvim',
-    config = function()
-      require('mason-lspconfig').setup({
-        ensure_installed = { 'lua_ls', 'gopls', 'ruby_lsp', 'html' },
-        automatic_installation = false,
-      })
-    end,
-  },
-  {
-    'neovim/nvim-lspconfig',
+    "neovim/nvim-lspconfig",
     config = function()
       local lspconfig = require('lspconfig')
       local capabilities = require("blink.cmp").get_lsp_capabilities()
@@ -43,7 +49,16 @@ return {
       lspconfig.lua_ls.setup { capabilities = capabilities }
       lspconfig.ruby_lsp.setup({
         capabilities = capabilities,
-        cmd = { os.getenv("HOME") .. "/.local/share/mise/installs/ruby/3.4.1/bin/ruby-lsp" }
+        on_attach = function(client, _)
+          client.server_capabilities.documentFormattingProvider = true
+          client.server_capabilities.documentRangeFormattingProvider = true
+        end,
+        cmd = { os.getenv("HOME") .. "/.local/share/mise/installs/ruby/3.4.1/bin/ruby-lsp" },
+        settings = {
+          formatter = {
+            enable = true,
+          }
+        }
       })
       lspconfig.templ.setup { capabilities = capabilities }
 
@@ -66,7 +81,7 @@ return {
 
       vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
         border = 'rounded', -- You can choose 'single', 'double', 'rounded', 'solid', 'shadow'
-        width = 60,         -- Set the width of the floating window
+        width = 80,         -- Set the width of the floating window
         height = 20,        -- Set the height of the floating window
       })
 
