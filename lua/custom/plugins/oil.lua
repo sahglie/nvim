@@ -7,6 +7,9 @@ return {
   config = function()
     local oil = require("oil")
     oil.setup({
+      view_options = {
+        show_hidden = true
+      },
       default_file_explorer = true,
       keymaps = {
         ["L"] = "actions.preview",

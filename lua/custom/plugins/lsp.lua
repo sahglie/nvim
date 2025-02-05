@@ -47,12 +47,13 @@ return {
       local util = require('lspconfig/util')
 
       lspconfig.lua_ls.setup { capabilities = capabilities }
+
       lspconfig.ruby_lsp.setup({
         capabilities = capabilities,
-        on_attach = function(client, _)
-          client.server_capabilities.documentFormattingProvider = true
-          client.server_capabilities.documentRangeFormattingProvider = true
-        end,
+        --on_attach = function(client, _)
+        --  client.server_capabilities.documentFormattingProvider = true
+        --  client.server_capabilities.documentRangeFormattingProvider = true
+        --end,
         cmd = { os.getenv("HOME") .. "/.local/share/mise/installs/ruby/3.4.1/bin/ruby-lsp" },
         settings = {
           formatter = {
@@ -60,6 +61,7 @@ return {
           }
         }
       })
+
       lspconfig.templ.setup { capabilities = capabilities }
 
       lspconfig.gopls.setup {
@@ -136,7 +138,7 @@ return {
       vim.keymap.set('n', '<leader>gd', vim.lsp.buf.definition, {})
       vim.keymap.set('n', '<leader>gr', vim.lsp.buf.references, {})
       vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, {})
-      vim.keymap.set('n', '\\', vim.lsp.buf.format, {})
+      vim.keymap.set('n', '<leader>gf', vim.lsp.buf.format, {})
       vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, {})
     end,
   },
