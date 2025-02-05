@@ -7,6 +7,23 @@ return {
   },
   config = function()
     require("telescope").setup {
+      defaults = {
+        layout_config = {
+          horizontal = {
+            prompt_position = "top",
+            preview_width = 0.5,
+            border = true,
+          },
+        },
+        sorting_strategy = "ascending",
+        border = true,
+        borderchars = {
+          { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+          prompt = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+          results = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+          preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+        },
+      },
       pickers = {
         find_files = {}
       },
