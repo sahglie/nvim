@@ -8,6 +8,8 @@ return {
   config = function()
     require("telescope").setup {
       defaults = {
+        file_ignore_patterns = {},
+        hidden = true,
         layout_config = {
           horizontal = {
             prompt_position = "top",
@@ -25,7 +27,10 @@ return {
         },
       },
       pickers = {
-        find_files = {}
+        find_files = {
+          hidden = true,
+          no_ignore = true
+        }
       },
       extensions = {
         fzf = {}
