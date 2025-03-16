@@ -12,7 +12,17 @@ return {
           ["alternate"] = "{}.go",
           ["type"] = "test"
         }
-      }
+      },
+      ["*.rb"] = {
+        ["lib/*.rb"] = {
+          ["alternate"] = "test/{}_test.rb",
+          ["type"] = "source"
+        },
+        ["test/*_test.rb"] = {
+          ["alternate"] = "lib/{}.rb",
+          ["type"] = "test"
+        }
+      },
     }
   end
 }

@@ -8,5 +8,7 @@ return {
     vim.keymap.set("n", "<leader>ss", function()
       require("luasnip.loaders").edit_snippet_files()
     end)
+    -- Assuming your snippet file is in ~/.config/nvim/lua/snippets/go.lua
+    require("luasnip").add_snippets("go", require("snippets.go"))
   end,
 }

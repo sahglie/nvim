@@ -8,7 +8,7 @@ return {
   config = function()
     require("telescope").setup {
       defaults = {
-        file_ignore_patterns = {},
+        file_ignore_patterns = { "^.git/" },
         hidden = true,
         layout_config = {
           horizontal = {
@@ -18,13 +18,6 @@ return {
           },
         },
         sorting_strategy = "ascending",
-        border = true,
-        borderchars = {
-          { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
-          prompt = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
-          results = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
-          preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
-        },
       },
       pickers = {
         find_files = {
