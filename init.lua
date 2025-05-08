@@ -39,3 +39,9 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     vim.highlight.on_yank()
   end,
 })
+
+-- create scratch buffer
+vim.api.nvim_create_user_command('Scratch',
+  'new | setlocal buftype=nofile bufhidden=hide noswapfile',
+  {}
+)
