@@ -250,6 +250,12 @@ return {
 
       vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
       vim.keymap.set('n', '<leader>gd', vim.lsp.buf.definition, {})
+
+      -- <C-CR> doesn't work, when working in a ruby buffer (no idea why yet), ruby buffers
+      -- actually send ^M when following the below test.
+      -- Enter insert mode, press Ctrl+v followed by Ctrl+Enter, then look at what appears
+      -- and use that in the mapping. Example if your terminal sends ^M for Ctrl+Enter
+      vim.keymap.set('n', '<C-m>', vim.lsp.buf.definition, {})
       vim.keymap.set('n', '<C-CR>', vim.lsp.buf.definition, {})
       vim.keymap.set('n', '<leader>e', vim.lsp.buf.rename, {})
       vim.keymap.set('n', '<leader>gr', vim.lsp.buf.references, {})
