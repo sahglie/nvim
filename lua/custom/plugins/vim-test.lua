@@ -9,11 +9,11 @@ return {
     vim.keymap.set("n", "<leader>T", ":TestFile<CR>", {})
     vim.keymap.set("n", "<leader>a", ":TestSuite<CR>", {})
     vim.keymap.set("n", "<leader>l", ":TestLast<CR>", {})
-    vim.keymap.set("n", "<leader>g", ":TestVisit<CR>", {})
+    --vim.keymap.set("n", "<leader>g", ":TestVisit<CR>", {})
     vim.g['test#go#gotest#options'] = '-v'
     --vim.cmd("let test#strategy = 'vimux'")
-    --
-    --
+
+
     vim.cmd([[
       function! DockerTransform(cmd) abort
         " let l:docker = "docker compose exec -e RAILS_ENV=test -e SKIP_CSS_BUILD=true -e SKIP_JS_BUILD=true web"
