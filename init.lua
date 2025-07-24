@@ -32,6 +32,8 @@ vim.keymap.set("n", 'tt', ':A<CR>', { noremap = true, silent = true })
 
 require("config.lazy")
 
+vim.g.rails_test_framework = 'test_unit'
+
 vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "Highlight when yanking (copyting) text",
   group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),

@@ -8,8 +8,10 @@ return {
   config = function()
     require("telescope").setup {
       defaults = {
-        file_ignore_patterns = { "^.git/" },
-        hidden = true,
+        -- These patterns are respected by default by all pickers
+        file_ignore_patterns = {
+          "^.git/",
+        },
         layout_config = {
           horizontal = {
             prompt_position = "top",
@@ -22,11 +24,16 @@ return {
       pickers = {
         find_files = {
           hidden = true,
-          no_ignore = false
+          no_ignore = false,
         }
       },
       extensions = {
-        fzf = {}
+        fzf = {
+          fuzzy = true,                   -- false will only do exact matching
+          override_generic_sorter = true, -- override the generic sorter
+          override_file_sorter = true,    -- override the file sorter
+          case_mode = "smart_case",
+        }
       }
     }
 
@@ -38,7 +45,16 @@ return {
     vim.keymap.set("n", "<leader>b", require("telescope.builtin").buffers)
     vim.keymap.set("n", "<leader>f", require("telescope.builtin").find_files)
     vim.keymap.set("n", "<leader>fi", function()
-      require("telescope.builtin").find_files({ hidden = true, no_ignore = true })
+      require("telescope.builtin").find_files({
+        hidden = true,
+        no_ignore = true,
+        file_ignore_patterns = {
+          "%.git/",
+          "%.idea/",
+          "node_modules/",
+          "^tmp/"
+        },
+      })
     end)
     vim.keymap.set("n", "<leader>sk", require("telescope.builtin").keymaps)
     vim.keymap.set("n", "<leader>sa", require("telescope.builtin").commands)

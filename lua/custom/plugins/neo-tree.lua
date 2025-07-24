@@ -8,6 +8,19 @@ return {
   },
   config = function()
     require("neo-tree").setup({
+      event_handlers = {
+        {
+          event = "file_opened",
+          handler = function(file_path)
+            require("neo-tree.command").execute({ action = "close" })
+          end
+        },
+      },
+
+      follow_current_file = {
+        enable = true,
+      },
+
       filesystem = {
         filtered_items = {
           visible = true,
@@ -19,6 +32,7 @@ return {
     })
 
     vim.keymap.set("c", "tt", ":Neotree filesystem reveal toggle left<CR>", {})
+    vim.keymap.set('n', 'F', ':Neotree reveal<CR>', { desc = 'Reveal current file in neotree' })
     --vim.keymap.set("n", "<leader>bf", ":Neotree buffers reveal toggle float<CR>", {})
   end
 }
