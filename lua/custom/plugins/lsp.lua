@@ -1,267 +1,162 @@
+-- =============================================================================
+-- LSP AND AUTOCOMPLETION CONFIGURATION
+-- =============================================================================
+-- This file configures the Neovim LSP client, the Mason package manager
+-- for installing LSPs, and the nvim-cmp autocompletion engine.
+-- =============================================================================
+
 return {
+  -----------------------------------------------------------------------------
+  -- LSP SERVER MANAGEMENT & CONFIGURATION
+  -----------------------------------------------------------------------------
   {
-    "hrsh7th/cmp-nvim-lsp"
+    'neovim/nvim-lspconfig',
+    dependencies = {
+      { 'williamboman/mason.nvim',           version = 'v2.0.1' },
+      { 'williamboman/mason-lspconfig.nvim', version = 'v2.1.0' },
+      { 'j-hui/fidget.nvim',                 opts = {} },
+      'folke/neodev.nvim',
+      'hrsh7th/cmp-nvim-lsp',
+    },
+    config = function()
+      -- This function is called by the LspAttach event and contains our keymaps
+      local on_attach = function(client, bufnr)
+        local nmap = function(keys, func, desc)
+          if desc then desc = 'LSP: ' .. desc end
+          vim.keymap.set('n', keys, func, { buffer = bufnr, noremap = true, silent = true, desc = desc })
+        end
+
+        nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+        nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+        nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+        nmap('gr', vim.lsp.buf.references, '[G]oto [R]eferences')
+        nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
+        nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
+        nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+        nmap('<leader>ws', vim.lsp.buf.workspace_symbol, '[W]orkspace [S]ymbols')
+        nmap('<leader>d', vim.diagnostic.open_float, '[D]iagnostics')
+        nmap('[d', vim.diagnostic.goto_prev, 'Go to previous diagnostic')
+        nmap(']d', vim.diagnostic.goto_next, 'Go to next diagnostic')
+
+        if client:supports_method 'textDocument/formatting' then
+          vim.api.nvim_create_autocmd('BufWritePre', {
+            group = vim.api.nvim_create_augroup('LspFormat.' .. bufnr, { clear = true }),
+            buffer = bufnr,
+            callback = function()
+              if client.name == 'gopls' then
+                local params = vim.lsp.util.make_range_params()
+                params.context = { only = { 'source.organizeImports' } }
+                local result = vim.lsp.buf_request_sync(0, 'textDocument/codeAction', params, 3000)
+                if result and result[1] and result[1].result then
+                  local enc = (vim.lsp.get_client_by_id(client.id) or {}).offset_encoding or 'utf-16'
+                  vim.lsp.util.apply_workspace_edit(result[1].result.edit, enc)
+                end
+              end
+              vim.lsp.buf.format { async = false, bufnr = bufnr }
+            end,
+          })
+        end
+      end
+
+      -- Configure diagnostic icons
+      vim.diagnostic.config({
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = '',
+            [vim.diagnostic.severity.WARN] = '',
+            [vim.diagnostic.severity.HINT] = '',
+            [vim.diagnostic.severity.INFO] = '',
+          },
+        },
+      })
+
+      vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
+
+      -- Setup Mason and mason-lspconfig
+      require('mason').setup()
+      require('mason-lspconfig').setup {
+        ensure_installed = { 'lua_ls', 'gopls', 'ruby_lsp', 'pyright', 'templ' },
+        automatic_enable = true,
+      }
+
+      local capabilities = require('cmp_nvim_lsp').default_capabilities()
+      local lspconfig = require 'lspconfig'
+
+      -- Apply custom settings and on_attach to servers.
+      -- This merges with the automatic setup from mason-lspconfig.
+
+      local servers = { 'lua_ls', 'gopls', 'ruby_lsp', 'pyright', 'templ' }
+      for _, server_name in ipairs(servers) do
+        local opts = {
+          on_attach = on_attach,
+          capabilities = capabilities,
+        }
+
+        if server_name == 'gopls' then
+          opts.settings = { gopls = { completeUnimported = true, usePlaceholders = true, analyses = { unusedparams = true } } }
+          lspconfig[server_name].setup(opts)
+          -- elseif server_name == 'ruby_lsp' then
+          --   opts.init_options = { enabledFeatures = { 'rails' }, addonSettings = { ['Ruby LSP Rails'] = { enablePendingMigrationsPrompt = false } } }
+          --   lspconfig[server_name].setup(opts)
+        elseif server_name == 'lua_ls' then
+          opts.settings = { Lua = { runtime = { version = 'LuaJIT' }, workspace = { checkThirdParty = false, library = { vim.env.VIMRUNTIME } } } }
+          lspconfig[server_name].setup(opts)
+        end
+      end
+    end,
   },
+
+  -----------------------------------------------------------------------------
+  -- AUTOCOMPLETION ENGINE (NVIM-CMP)
+  -----------------------------------------------------------------------------
   {
-    "hrsh7th/nvim-cmp",
+    'hrsh7th/nvim-cmp',
     event = 'InsertEnter',
     dependencies = {
-      -- Snippet Engine & its associated nvim-cmp source
+      'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-path',
+      'saadparwaiz1/cmp_luasnip',
       {
         'L3MON4D3/LuaSnip',
         build = (function()
-          -- Build Step is needed for regex support in snippets
-          -- This step is not supported in many windows environments
-          -- Remove the below condition to re-enable on windows
-          if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
-            return
-          end
+          if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then return end
           return 'make install_jsregexp'
         end)(),
       },
-      'saadparwaiz1/cmp_luasnip',
-
-      -- Adds other completion capabilities.
-      --  nvim-cmp does not ship with all sources by default. They are split
-      --  into multiple repos for maintenance purposes.
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-path',
-
-      -- If you want to add a bunch of pre-configured snippets,
-      --    you can use this plugin to help you. It even has snippets
-      --    for various frameworks/libraries/etc. but you will have to
-      --    set up the ones that are useful for you.
-      -- 'rafamadriz/friendly-snippets',
     },
     config = function()
-      -- See `:help cmp`
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
-      luasnip.config.setup {}
+
+      -- This function will jump forward through snippet placeholders.
+      -- It will expand a snippet if the cursor is at the end of one.
+      local luasnip_expand_or_jump = function()
+        if luasnip.expand_or_jumpable() then
+          luasnip.expand_or_jump()
+        end
+      end
+
+      -- This function will jump backward through snippet placeholders.
+      local luasnip_jump_prev = function()
+        if luasnip.jumpable(-1) then
+          luasnip.jump(-1)
+        end
+      end
 
       cmp.setup {
-        window = {
-          completion = cmp.config.window.bordered(),
-          documentation = cmp.config.window.bordered {
-            border = 'rounded',
-            winhighlight = 'Normal:CmpDocumentation,FloatBorder:CmpDocumentationBorder',
-            max_width = 30,
-          },
-        },
-        snippet = {
-          expand = function(args)
-            luasnip.lsp_expand(args.body)
-          end,
-        },
-        completion = { completeopt = 'menu,menuone,noinsert' },
-
-        -- For an understanding of why these mappings were
-        -- chosen, you will need to read `:help ins-completion`
-        --
-        -- No, but seriously. Please read `:help ins-completion`, it is really good!
+        snippet = { expand = function(args) luasnip.lsp_expand(args.body) end },
+        window = { completion = cmp.config.window.bordered(), documentation = cmp.config.window.bordered() },
         mapping = cmp.mapping.preset.insert {
-          -- Select the [n]ext item
           ['<C-n>'] = cmp.mapping.select_next_item(),
-          -- Select the [p]revious item
           ['<C-p>'] = cmp.mapping.select_prev_item(),
-
-          -- Accept ([y]es) the completion.
-          --  This will auto-import if your LSP supports it.
-          --  This will expand snippets if the LSP sent a snippet.
           ['<C-y>'] = cmp.mapping.confirm { select = true },
-
-          -- Manually trigger a completion from nvim-cmp.
-          --  Generally you don't need this, because nvim-cmp will display
-          --  completions whenever it has completion options available.
           ['<C-Space>'] = cmp.mapping.complete {},
-
-          -- Think of <c-l> as moving to the right of your snippet expansion.
-          --  So if you have a snippet that's like:
-          --  function $name($args)
-          --    $body
-          --  end
-          --
-          -- <c-l> will move you to the right of each of the expansion locations.
-          -- <c-h> is similar, except moving you backwards.
-          ['<C-l>'] = cmp.mapping(function()
-            if luasnip.expand_or_locally_jumpable() then
-              luasnip.expand_or_jump()
-            end
-          end, { 'i', 's' }),
-          ['<C-h>'] = cmp.mapping(function()
-            if luasnip.locally_jumpable(-1) then
-              luasnip.jump(-1)
-            end
-          end, { 'i', 's' }),
+          -- Use the named functions here for clarity and correctness
+          ['<C-l>'] = cmp.mapping(luasnip_expand_or_jump, { 'i', 's' }),
+          ['<C-h>'] = cmp.mapping(luasnip_jump_prev, { 'i', 's' }),
         },
-        sources = {
-          { name = 'nvim_lsp' },
-          { name = 'luasnip' },
-          { name = 'path' },
-        },
+        sources = { { name = 'nvim_lsp' }, { name = 'luasnip' }, { name = 'path' } },
       }
-    end,
-  },
-  {
-    'williamboman/mason.nvim',
-    config = function()
-      require('mason').setup {
-        ensure_installed = { 'gofumpt', 'goimports', 'goimports-revised' },
-      }
-    end,
-  },
-  {
-    'williamboman/mason-lspconfig.nvim',
-    config = function()
-      require('mason-lspconfig').setup({
-        ensure_installed = { 'lua_ls', 'gopls', 'ruby_lsp', 'html' },
-        automatic_installation = true,
-      })
-    end,
-  },
-  {
-    "neovim/nvim-lspconfig",
-    dependencies = {
-      "saghen/blink.cmp",
-      {
-        "folke/lazydev.nvim",
-        ft = "lua",
-        opts = {
-          library = {
-            { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-          }
-        },
-      },
-    },
-  },
-  {
-    "neovim/nvim-lspconfig",
-    config = function()
-      local lspconfig = require('lspconfig')
-      local capabilities = require("blink.cmp").get_lsp_capabilities()
-
-      require("lspconfig").lua_ls.setup { capabilities = capabilities }
-      local util = require('lspconfig/util')
-
-      lspconfig.lua_ls.setup { capabilities = capabilities }
-
-      lspconfig.ruby_lsp.setup({
-        capabilities = capabilities,
-        --on_attach = function(client, _)
-        --  client.server_capabilities.documentFormattingProvider = true
-        --  client.server_capabilities.documentRangeFormattingProvider = true
-        --end,
-        cmd = { os.getenv("HOME") .. "/.local/share/mise/installs/ruby/3.4.1/bin/ruby-lsp" },
-        settings = {
-          formatter = {
-            enable = true,
-          }
-        }
-      })
-
-      lspconfig.templ.setup { capabilities = capabilities }
-
-      lspconfig.gopls.setup {
-        --on_attach = on_attach,
-        capabilities = capabilities,
-        cmd = { 'gopls' },
-        filetypes = { 'go', 'gomod', 'gowork', 'gotmpl' },
-        root_dir = util.root_pattern('go.work', 'go.mod', '.git'),
-        settings = {
-          gopls = {
-            completeUnimported = true,
-            usePlaceholders = true,
-            analyses = {
-              unusedparams = true,
-            },
-          },
-        },
-      }
-
-      vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
-        border = 'rounded', -- You can choose 'single', 'double', 'rounded', 'solid', 'shadow'
-        width = 80,         -- Set the width of the floating window
-        height = 20,        -- Set the height of the floating window
-      })
-
-      vim.lsp.handlers['textDocument/completion'] = vim.lsp.with(vim.lsp.handlers.completion, {
-        border = 'rounded', -- You can choose 'single', 'double', 'rounded', 'solid', 'shadow'
-        width = 60,         -- Set the width of the floating window
-        height = 20,        -- Set the height of the floating window
-      })
-
-      vim.api.nvim_create_autocmd('BufWritePre', {
-        pattern = '*.go',
-        callback = function()
-          local params = vim.lsp.util.make_range_params()
-          params.context = { only = { 'source.organizeImports' } }
-          -- buf_request_sync defaults to a 1000ms timeout. Depending on your
-          -- machine and codebase, you may want longer. Add an additional
-          -- argument after params if you find that you have to write the file
-          -- twice for changes to be saved.
-          -- E.g., vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
-          local result = vim.lsp.buf_request_sync(0, 'textDocument/codeAction', params)
-          for cid, res in pairs(result or {}) do
-            for _, r in pairs(res.result or {}) do
-              if r.edit then
-                local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or 'utf-16'
-                vim.lsp.util.apply_workspace_edit(r.edit, enc)
-              end
-            end
-          end
-          vim.lsp.buf.format { async = false }
-        end,
-      })
-
-      vim.api.nvim_create_autocmd('LspAttach', {
-        callback = function(args)
-          local client = vim.lsp.get_client_by_id(args.data.client_id)
-          if not client then return end
-
-          if vim.bo.filetype == "lua" and client.supports_method("textDocument/formatting") then
-            -- format the current buffer on save
-            vim.api.nvim_create_autocmd("BufWritePre", {
-              buffer = args.buf,
-              callback = function()
-                vim.lsp.buf.format({ bufnr = args.buf, id = client.id })
-              end
-            })
-            --vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
-          end
-        end,
-      })
-
-      vim.api.nvim_create_autocmd('LspAttach', {
-        callback = function(args)
-          local client = vim.lsp.get_client_by_id(args.data.client_id)
-          if not client then return end
-
-          if vim.bo.filetype == "ruby" and client.supports_method("textDocument/formatting") then
-            -- format the current buffer on save
-            vim.api.nvim_create_autocmd("BufWritePre", {
-              buffer = args.buf,
-              callback = function()
-                vim.lsp.buf.format({ bufnr = args.buf, id = client.id })
-              end
-            })
-          end
-        end,
-      })
-
-      vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
-      vim.keymap.set('n', '<leader>gd', vim.lsp.buf.definition, {})
-
-      -- <C-CR> doesn't work, when working in a ruby buffer (no idea why yet), ruby buffers
-      -- actually send ^M when following the below test.
-      -- Enter insert mode, press Ctrl+v followed by Ctrl+Enter, then look at what appears
-      -- and use that in the mapping. Example if your terminal sends ^M for Ctrl+Enter
-      vim.keymap.set('n', '<C-m>', vim.lsp.buf.definition, {})
-      vim.keymap.set('n', '<C-CR>', vim.lsp.buf.definition, {})
-      vim.keymap.set('n', '<leader>e', vim.lsp.buf.rename, {})
-      vim.keymap.set('n', '<leader>gr', vim.lsp.buf.references, {})
-      vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, {})
-      vim.keymap.set('n', 'c-\\', vim.lsp.buf.format, {})
-      vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, {})
     end,
   },
 }

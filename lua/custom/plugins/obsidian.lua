@@ -10,11 +10,11 @@ return {
     workspaces = {
       {
         name = "sahglie-vault",
-        path = os.getenv("HOME") .. "/Development/projects/obsidian-sahglie-vault",
+        path = os.getenv("HOME") .. "/Development/projects/obsidian-vault",
       }
     },
     daily_notes = {
-      folder = "sahglie-vault/UCB/TODOs",
+      folder = "UCB/TODOs",
       date_format = "%Y-%m-%d"
     },
 

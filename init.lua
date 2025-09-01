@@ -18,7 +18,7 @@ vim.keymap.set('n', 'L', '$')
 vim.keymap.set('n', 'U', 'mmviw~`m')
 vim.keymap.set('n', '<leader>r', ':!%:p<cr>')
 vim.keymap.set('n', '<leader>rd', ':!docker compose exec web % -e development<cr>')
---vim.keymap.set('n', '<leader>h', ':set hls!<cr>')
+vim.keymap.set('n', '<leader>h', ':set hls!<cr>')
 vim.keymap.set('n', '<leader>w', ':set wrap!<cr>')
 vim.keymap.set('n', '<leader>d', ':bp<bar>vs<bar>bn<bar>bd<cr>')
 
@@ -47,3 +47,4 @@ vim.api.nvim_create_user_command('Scratch',
   'new | setlocal buftype=nofile bufhidden=hide noswapfile',
   {}
 )
+
