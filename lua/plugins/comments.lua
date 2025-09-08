@@ -1,18 +1,18 @@
 return {
   {
-    'numToStr/Comment.nvim',
+    "numToStr/Comment.nvim",
     opts = {
       toggler = {
-        line = ';',
+        line = ";",
       },
       opleader = {
-        line = ';',
-      }
+        line = ";",
+      },
     },
     -- Add your custom configuration after the plugin loads
     config = function(_, opts)
       -- Setup with the default options first
-      require('Comment').setup(opts)
+      require("Comment").setup(opts)
     end,
-  }
+  },
 }
