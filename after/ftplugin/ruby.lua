@@ -10,9 +10,7 @@ local ruby_colors = {
   light_green = "#A5C261",
   white = "#FFFFFF",
   light_white = "#DDDDDD",
-  string = "#A5C261",
   blue = "#639CBE",
-  symbol = "#639CBE",
   clay_red = "#CC7833",
 }
 

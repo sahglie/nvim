@@ -28,6 +28,35 @@ return {
           --   end,
           -- })
         end,
+
+        -- Add your custom LSP here
+        educationalsp = function(_, _)
+          local lspconfig = require("lspconfig")
+          local configs = require("lspconfig.configs")
+
+          if not configs.educationalsp then
+            configs.educationalsp = {
+              default_config = {
+                cmd = { "/home/sah/Code/projects/go-lsp-tut/main" },
+                filetypes = { "markdown", "md" },
+                single_file_support = true,
+              },
+            }
+          end
+
+          vim.notify("Setting up educationalsp")
+          lspconfig.educationalsp.setup({
+            on_attach = function(client, bufnr)
+              vim.notify("educationalsp attached to markdown file: " .. bufnr)
+            end,
+            on_exit = function(code, signal, client_id)
+              vim.notify("educationalsp exited with code: " .. code)
+            end,
+            on_error = function(err)
+              vim.notify("educationalsp error: " .. vim.inspect(err))
+            end,
+          })
+        end,
       },
       servers = {
         ruby_lsp = {
@@ -38,6 +67,16 @@ return {
             addonSettings = { ["Ruby LSP Rails"] = { enablePendingMigrationsPrompt = false } },
           },
         },
+        gopls = {
+          settings = {
+            gopls = {
+              inlayHints = {
+                parameterNames = false,
+              },
+            },
+          },
+        },
+        educationalsp = {},
       },
     },
   },

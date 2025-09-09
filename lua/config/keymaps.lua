@@ -30,16 +30,10 @@ vim.keymap.set("n", "tt", ":A<CR>", { noremap = true, silent = true })
 
 vim.keymap.set("n", ",f", LazyVim.pick("files"))
 vim.keymap.set("n", ",b", LazyVim.pick("buffers"))
---vim.keymap.set("n", ",g", ":LazyGit<CR>", { noremap = true, silent = true })
+
 vim.keymap.set("n", ",g", function()
   Snacks.lazygit({ cwd = LazyVim.root.git() })
 end, { desc = "Lazygit (Root Dir)" })
-
--- NvimTmuxNaviator
-vim.keymap.set("n", "<C-h>", "<Cmd>NvimTmuxNavigateLeft<CR>", {})
-vim.keymap.set("n", "<C-j>", "<Cmd>NvimTmuxNavigateDown<CR>", {})
---vim.keymap.set("n", "<C-k>", "<Cmd>NvimTmuxNavigateUp<CR>", {})
-vim.keymap.set("n", "<C-l>", "<Cmd>NvimTmuxNavigateRight<CR>", {})
 
 vim.keymap.set("n", ",t", function()
   require("neotest").run.run()
