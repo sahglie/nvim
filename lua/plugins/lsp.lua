@@ -77,6 +77,7 @@ return {
           },
         },
         educationalsp = {},
+        marksman = false,
       },
     },
   },
