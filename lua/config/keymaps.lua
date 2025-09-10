@@ -6,17 +6,13 @@
 --vim.keymap.set('v', '<leader>y', '"*y')
 --vim.keymap.set('n', '<leader>p', '"*p')
 
--- vim.keymap.set("n", "<space><space>x", "<cmd>source %<CR>")
--- vim.keymap.set("n", "<space>x", ":.lua<CR>")
--- vim.keymap.set("v", "<space>x", ":lua<CR>")
-
 vim.keymap.set("n", "<leader>.", "<c-^>")
 vim.keymap.set("n", "H", "^")
 vim.keymap.set("n", "L", "$")
 vim.keymap.set("n", "U", "mmviw~`m")
 -- vim.keymap.set("n", ",r", ":!%:p<cr>")
 
-vim.keymap.set("n", ",r", function()
+vim.keymap.set("n", "<leader>r", function()
   local script_path = vim.fn.expand("%:p")
   vim.notify("running cmd: " .. script_path)
   local output = vim.fn.system(script_path)
@@ -41,7 +37,7 @@ vim.keymap.set("n", ",r", function()
 end, { desc = "Run script and capture output" })
 
 -- vim.keymap.set("n", ",rd", ":!docker compose exec web % -e development<cr>")
-vim.keymap.set("n", ",rd", function()
+vim.keymap.set("n", "<leader>rd", function()
   local script_path = vim.fn.expand("%") -- Relative path instead of %:p
   local cmd = "docker compose exec web " .. script_path .. " -e development"
   vim.notify("running cmd: " .. cmd)
@@ -63,21 +59,15 @@ vim.keymap.set("n", "<leader>h", ":set hls!<cr>")
 vim.keymap.set("n", "<leader>w", ":set wrap!<cr>")
 vim.keymap.set("n", "<leader>d", ":bp<bar>vs<bar>bn<bar>bd<cr>")
 
--- Move around splits with <c-hjkl>
-vim.keymap.set("n", "<c-j>", "<c-w>j")
-vim.keymap.set("n", "<c-k>", "<c-w>k")
-vim.keymap.set("n", "<c-h>", "<c-w>h")
-vim.keymap.set("n", "<c-l>", "<c-w>l")
-
 vim.keymap.set("n", "tt", ":A<CR>", { noremap = true, silent = true })
 
-vim.keymap.set("n", ",f", LazyVim.pick("files"))
-vim.keymap.set("n", ",b", LazyVim.pick("buffers"))
+-- vim.keymap.set("n", ",f", LazyVim.pick("files"))
+-- vim.keymap.set("n", ",b", LazyVim.pick("buffers"))
 
-vim.keymap.set("n", ",g", function()
-  Snacks.lazygit({ cwd = LazyVim.root.git() })
-end, { desc = "Lazygit (Root Dir)" })
+-- vim.keymap.set("n", ",g", function()
+--   Snacks.lazygit({ cwd = LazyVim.root.git() })
+-- end, { desc = "Lazygit (Root Dir)" })
 
-vim.keymap.set("n", ",t", function()
-  require("neotest").run.run()
-end)
+-- vim.keymap.set("n", ",t", function()
+--   require("neotest").run.run()
+-- end)

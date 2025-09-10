@@ -37,7 +37,7 @@ return {
           if not configs.educationalsp then
             configs.educationalsp = {
               default_config = {
-                cmd = { "/home/sah/Code/projects/go-lsp-tut/main" },
+                cmd = { "/home/sah/Development/projects/go-lsp-tut/main" },
                 filetypes = { "markdown", "md" },
                 single_file_support = true,
               },
