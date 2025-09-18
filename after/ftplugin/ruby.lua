@@ -12,6 +12,7 @@ local ruby_colors = {
   light_white = "#DDDDDD",
   blue = "#639CBE",
   clay_red = "#CC7833",
+  light_purple = "#cbc6f6",
 }
 
 -- Set the highlight groups for Ruby-specific tokens
@@ -28,5 +29,6 @@ hi(0, "@lsp.type.namespace.ruby", { fg = ruby_colors.blue })
 hi(0, "@lsp.typemod.class.declaration.ruby", { fg = ruby_colors.white, bold = true })
 hi(0, "@lsp.typemod.namspace.declaration.ruby", { fg = ruby_colors.white, bold = true })
 hi(0, "@variable.ruby", { fg = ruby_colors.light_white })
+hi(0, "@variable.member.ruby", { fg = ruby_colors.light_purple })
 hi(0, "@punctuation.delimiter.ruby", { fg = ruby_colors.white })
 hi(0, "@punctuation.bracket.ruby", { fg = ruby_colors.white })

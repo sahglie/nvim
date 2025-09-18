@@ -64,6 +64,7 @@ return {
           cmd = { "bundle", "exec", "ruby-lsp" },
           init_options = {
             formatter = "standard",
+            testRunner = true,
             addonSettings = { ["Ruby LSP Rails"] = { enablePendingMigrationsPrompt = false } },
           },
         },

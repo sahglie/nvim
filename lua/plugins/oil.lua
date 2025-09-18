@@ -5,8 +5,7 @@ return {
     { "nvim-tree/nvim-web-devicons" },
   },
   config = function()
-    local oil = require("oil")
-    oil.setup({
+    require("oil").setup({
       view_options = {
         show_hidden = true,
       },
@@ -17,8 +16,6 @@ return {
         ["R"] = "actions.refresh",
       },
     })
-    --vim.keymap.set("n", "-", oil.toggle_float, {})
-    vim.keymap.set("n", ",1", oil.toggle_float, {})
   end,
   lazy = false,
 }

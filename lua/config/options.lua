@@ -17,3 +17,6 @@ vim.opt.relativenumber = false
 -- In your Mason configuration
 --
 vim.g.lazyvim_ruby_formatter = "standardrb"
+
+-- Then, define your custom highlight group
+-- vim.api.nvim_set_hl(0, "FzfLuaSelection", { bg = "#dddddd" })
