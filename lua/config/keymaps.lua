@@ -15,7 +15,7 @@ vim.keymap.set("n", "<leader>hi", ":set hls!<cr>")
 vim.keymap.set("n", "<leader>w", ":set wrap!<cr>")
 vim.keymap.set("n", "<leader>d", ":bp<bar>vs<bar>bn<bar>bd<cr>")
 
-vim.keymap.set("n", ",1", require("oil").toggle_float, {})
+vim.keymap.set("n", "<leader>1", require("oil").toggle_float, {})
 
 vim.keymap.set("n", "tt", ":A<CR>", { noremap = true, silent = true })
 vim.keymap.set({ "n", "v" }, "<leader>a", ":Gen<CR>")

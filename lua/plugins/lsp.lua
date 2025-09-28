@@ -59,15 +59,15 @@ return {
         end,
       },
       servers = {
-        ruby_lsp = {
-          mason = false,
-          cmd = { "bundle", "exec", "ruby-lsp" },
-          init_options = {
-            formatter = "standard",
-            testRunner = true,
-            addonSettings = { ["Ruby LSP Rails"] = { enablePendingMigrationsPrompt = false } },
-          },
-        },
+        -- ruby_lsp = {
+        --   mason = false,
+        --   cmd = { "bundle", "exec", "ruby-lsp" },
+        --   init_options = {
+        --     formatter = "standard",
+        --     testRunner = true,
+        --     addonSettings = { ["Ruby LSP Rails"] = { enablePendingMigrationsPrompt = false } },
+        --   },
+        -- },
         gopls = {
           settings = {
             gopls = {
