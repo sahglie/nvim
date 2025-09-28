@@ -46,15 +46,15 @@ return {
 
           vim.notify("Setting up educationalsp")
           lspconfig.educationalsp.setup({
-            on_attach = function(client, bufnr)
-              vim.notify("educationalsp attached to markdown file: " .. bufnr)
-            end,
-            on_exit = function(code, signal, client_id)
-              vim.notify("educationalsp exited with code: " .. code)
-            end,
-            on_error = function(err)
-              vim.notify("educationalsp error: " .. vim.inspect(err))
-            end,
+            -- on_attach = function(client, bufnr)
+            --   vim.notify("educationalsp attached to markdown file: " .. bufnr)
+            -- end,
+            -- on_exit = function(code, signal, client_id)
+            --   vim.notify("educationalsp exited with code: " .. code)
+            -- end,
+            -- on_error = function(err)
+            --   vim.notify("educationalsp error: " .. vim.inspect(err))
+            -- end,
           })
         end,
       },
