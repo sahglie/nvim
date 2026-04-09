@@ -1,5 +1,5 @@
 return {
-  "nvim-mini/blink.cmp",
+  "saghen/blink.cmp",
   opts = function(_, opts)
     -- The 'enabled' option can be a function.
     -- We'll check the buffer's filetype ('vim.bo.ft')
