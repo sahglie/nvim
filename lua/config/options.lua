@@ -11,6 +11,8 @@ vim.g.maplocalleader = ","
 -- Disable relative line numbers
 vim.opt.relativenumber = false
 
+vim.opt.guicursor = "a:blinkon500-blinkoff500-blinkwait300"
+
 -- In your config
 -- vim.lsp.set_log_level("debug")
 -- Check logs at ~/.local/state/nvim/lsp.log
