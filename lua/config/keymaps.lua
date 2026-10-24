@@ -17,8 +17,13 @@ vim.keymap.set("n", "<leader>d", ":bp<bar>vs<bar>bn<bar>bd<cr>")
 
 vim.keymap.set("n", "<leader>1", require("oil").toggle_float, {})
 
-vim.keymap.set("n", "tt", ":A<CR>", { noremap = true, silent = true })
+-- vim.keymap.set("n", "tt", ":A<CR>", { noremap = true, silent = true })
 vim.keymap.set({ "n", "v" }, "<leader>a", ":Gen<CR>")
+
+-- lua/config/keymaps.lua
+vim.keymap.set("n", "tt", function()
+  require("custom.ruby_lsp").go_to_relevant_file()
+end, { desc = "Go to test/source (ruby-lsp)" })
 
 -- vim.keymap.set("n", ",f", LazyVim.pick("files"))
 -- vim.keymap.set("n", ",b", LazyVim.pick("buffers"))
